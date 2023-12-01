@@ -1,0 +1,119 @@
+<lccdd>
+
+  <info name="hcal_forward_klm.xml"
+        title="KLM version of the forward HCAL"
+        author="@sebouh137"
+        url="https://github.com/sebouh137"
+        status="development"
+        version="1.0"
+  ><comment/></info>
+
+  <define>
+    <documentation>
+      #### Material Thickness
+    </documentation>
+    <comment> Forward Hcal KLM thicknesses </comment>
+
+    <constant name="ForwardHcalKLM_hole_height" value="60*cm"/>
+    <constant name="ForwardHcalKLM_hole_width" value="60*cm"/>  
+    <constant name="ForwardHcalKLM_hole_offset_x" value="-10*cm"/>  
+    
+    <constant name="ForwardHcalKLMScintillatorThickness"     value="1*cm"/>
+    <constant name="ForwardHcalKLMAbsorberThickness"       value="2*cm"/>
+
+    <constant name="ForwardHcalKLM_ScintWidth" value="5*cm"/>
+    <constant name="ForwardHcalKLM_ScintLength" value="3*m"/>
+    
+    <constant name="ForwardHcalKLM_numLayers" value="44"/>
+    <constant name="ForwardHcalKLM_radius" value="267*cm"/>
+    <constant name="ForwardHcalKLM_zmin" value="359.6*cm"/>
+    <constant name="ForwardHcalKLM_ID" value="116"/>
+    
+    <documentation>
+      - KLM forward HCal N Layers and computed Thickness
+    </documentation>
+    <constant name="ForwardHcalKLMSingleLayerThickness"
+      value = "
+               ForwardHcalKLMAbsorberThickness +
+               ForwardHcalKLMScintillatorThickness "
+      />
+    <comment>pairs of layers</comment>
+    <constant name="ForwardHcalKLMLayer_NRepeat" value="ForwardHcalKLM_numLayers/2"/>
+  </define>
+
+  <limits>
+  </limits>
+
+  <regions>
+  </regions>
+
+  <display>
+  </display>
+
+  <detectors>
+    <documentation>
+            
+    </documentation>
+    <detector
+      id="ForwardHcalKLM_ID" 
+      name="ForwardHcalKLM" 
+      type="ForwardHcalKLM"
+      readout="ForwardHcalKLMHits"
+    >
+      <position x="0*m" y="0*m" z="ForwardHcalKLM_zmin"/>
+      <rotation x="0" y="0" z="0"/>
+      <dimensions 
+          x="ForwardHcalKLM_radius"
+	  y="ForwardHcalKLM_radius"
+        z="ForwardHcalKLMSingleLayerThickness * ForwardHcalKLMLayer_NRepeat*2+ForwardHcalKLMAbsorberThickness"
+	/>
+      <layer repeat="1" thickness = "ForwardHcalKLMAbsorberThickness">
+        <slice name="Absorber_slice" material="Iron" thickness="ForwardHcalKLMAbsorberThickness" vis="AnlBlue"/>
+      </layer>
+      <!--pairs of layers-->
+      <layer repeat="ForwardHcalKLMLayer_NRepeat" thickness = "2*ForwardHcalKLMSingleLayerThickness">
+        <slice name="Scintillator1_slice" material="PlasticScint126" thickness="ForwardHcalKLMScintillatorThickness" vis="AnlOrange" sensitive="true"/>
+        
+        <slice name="Absorber1_slice" material="Iron" thickness="ForwardHcalKLMAbsorberThickness" vis="AnlBlue"/>
+	 
+         <slice name="Scintillator2_slice" material="PlasticScint126" thickness="ForwardHcalKLMScintillatorThickness" vis="AnlOrange" sensitive="true"/>
+	 <slice name="Absorber2_slice" material="Iron" thickness="ForwardHcalKLMAbsorberThickness" vis="AnlBlue"/> 
+      </layer>
+      <insert_hole 
+        hole_height="ForwardHcalKLM_hole_height"
+        hole_width="ForwardHcalKLM_hole_width"
+	hole_offset_x="ForwardHcalKLM_hole_offset_x"
+
+      />
+    </detector>
+  </detectors>
+
+  <readouts>
+    <readout name="ForwardHcalKLMHits">
+      <segmentation type="MultiSegmentation" key="slice">
+	<segmentation
+	    name="vertical"
+            type="CartesianGridXY"
+            grid_size_x="ForwardHcalKLM_ScintWidth"
+            grid_size_y="ForwardHcalKLM_ScintLength"
+	    key_value="1" 
+	    />
+	<segmentation
+            name="horizontal"
+            type="CartesianGridXY"
+            grid_size_x="ForwardHcalKLM_ScintLength"
+            grid_size_y="ForwardHcalKLM_ScintWidth"
+            key_value="3"
+            />
+      </segmentation>
+      <id>system:8,barrel:3,module:4,layer:8,slice:5,x:32:-16,y:-16</id>  
+    </readout>
+  </readouts>
+
+  <plugins>
+  </plugins>
+
+  <fields>
+  </fields>
+
+</lccdd>

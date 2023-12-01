@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Input simulation parameters
+particle="e-"
+beam_energy=20
+num_events=20
+theta_min=15 # in degrees
+theta_max=15 # in degrees
+phi_min=-180 # in degrees
+phi_max=180 # in degrees 
+physics_list="FTFP_BERT"
+
+theta="${theta_min}-${theta_max}"
+
+# Output file names
+info_string="${particle}_${beam_energy}GeV_theta_${theta}deg"
+hepmcfile="gen_${info_string}.hepmc"
+simfile="insert_sim_${info_string}.edm4hep.root"
+recofile="insert_reco_${info_string}.edm4hep.root"
+
+# Generating hepmc file
+root -l -b -q "./hepmc_generation/gen_particles.cxx+(\
+${num_events},\
+\"${hepmcfile}\",\
+\"${particle}\",\
+${theta_min},\
+${theta_max},\
+${phi_min},\
+${phi_max},\
+${beam_energy})"
+
+# Running simulation
+npsim \
+   --compactFile klm.xml \
+   --numberOfEvents ${num_events} \
+   --physicsList ${physics_list} \
+   --inputFiles ${hepmcfile} \
+   --outputFile ${simfile}  || exit
+   
+# Deleting hepmcfile  
+rm ${hepmcfile}
+
+# Running reconstruction
+export JUGGLER_SIM_FILE=${simfile} JUGGLER_REC_FILE=${recofile} JUGGLER_N_EVENTS=${num_events}
+gaudirun.py klm_reco.py

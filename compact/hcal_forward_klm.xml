@@ -96,6 +96,7 @@
             type="CartesianGridXY"
             grid_size_x="ForwardHcalKLM_ScintWidth"
             grid_size_y="ForwardHcalKLM_ScintLength"
+	    offset_y="ForwardHcalKLM_ScintLength/2"
 	    key_value="1" 
 	    />
 	<segmentation
@@ -103,6 +104,7 @@
             type="CartesianGridXY"
             grid_size_x="ForwardHcalKLM_ScintLength"
             grid_size_y="ForwardHcalKLM_ScintWidth"
+            offset_x="ForwardHcalKLM_ScintLength/2"
             key_value="3"
             />
       </segmentation>
